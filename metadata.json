@@ -1,0 +1,6 @@
+{
+  "name": "Taghvim Sina",
+  "description": "تقویم سینا - تقویم فارسی، هجری، میلادی و محاسبه‌گر شیفت کاری ۵ تیمی",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

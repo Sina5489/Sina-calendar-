@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl" data-bs-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>تقویم سینا (Taghvim Sina)</title>
+  
+  <!-- Manifest & Favicon -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#005AC1">
+  
+  <!-- Bootstrap 5 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.rtl.min.css" rel="stylesheet">
+  <!-- Bootstrap Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <!-- Custom Styles -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="dark-mode fs-medium">
+
+  <!-- Top App Header -->
+  <header class="app-header">
+    <div class="container-fluid d-flex justify-content-between align-items-center">
+      <div class="brand-title">
+        <i class="bi bi-calendar3-event text-info"></i>
+        <span>تقویم سینا</span>
+      </div>
+      <div class="d-flex align-items-center gap-2">
+        <button id="pwaInstallBtn" class="btn btn-sm btn-outline-info d-none">
+          <i class="bi bi-download"></i> نصب برنامه
+        </button>
+        <button id="themeToggleBtn" class="btn btn-sm btn-outline-secondary">
+          <i class="bi bi-moon-stars" id="themeIcon"></i>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="container py-3">
+
+    <!-- VIEW 1: DASHBOARD (داشبورد) -->
+    <section id="view-dashboard" class="app-view">
+      
+      <!-- Live Countdown Hero Banner -->
+      <div class="countdown-banner mb-3">
+        <div class="d-flex justify-content-between align-items-center mb-1">
+          <span class="badge bg-light text-dark fw-bold px-3 py-1 rounded-pill" id="heroShiftLabel">
+            در حال بارگذاری...
+          </span>
+          <span class="fs-6 opacity-75" id="heroActiveTeamText">تیم فعال: --</span>
+        </div>
+        <h6 class="mt-2 mb-1 text-white-50">زمان باقی‌مانده تا تغییر شیفت بعدی</h6>
+        <div class="countdown-digits">
+          <div class="time-box">
+            <div class="num" id="cd-hours">00</div>
+            <div class="label">ساعت</div>
+          </div>
+          <div class="time-box">
+            <div class="num" id="cd-minutes">00</div>
+            <div class="label">دقیقه</div>
+          </div>
+          <div class="time-box">
+            <div class="num" id="cd-seconds">00</div>
+            <div class="label">ثانیه</div>
+          </div>
+        </div>
+        <div class="mt-2 fs-7 opacity-90" id="heroNextShiftText">
+          شیفت بعدی: -- (تیم --)
+        </div>
+      </div>
+
+      <!-- Today's Dates Grid Card -->
+      <div class="app-card">
+        <div class="app-card-title">
+          <span><i class="bi bi-clock-history text-primary me-2"></i>امروز در یک نگاه</span>
+          <span class="badge bg-primary text-white" id="dashWeekNum">هفته --</span>
+        </div>
+        <div class="row g-2 text-center">
+          <div class="col-4">
+            <div class="p-2 border rounded-3 bg-body-tertiary">
+              <small class="text-secondary d-block">خورشیدی</small>
+              <strong class="text-info fs-6" id="dashJalaliDate">--</strong>
+            </div>
+          </div>
+          <div class="col-4">
+            <div class="p-2 border rounded-3 bg-body-tertiary">
+              <small class="text-secondary d-block">قمری</small>
+              <strong class="text-warning fs-6" id="dashHijriDate">--</strong>
+            </div>
+          </div>
+          <div class="col-4">
+            <div class="p-2 border rounded-3 bg-body-tertiary">
+              <small class="text-secondary d-block">میلادی</small>
+              <strong class="text-success fs-6" id="dashGregorianDate">--</strong>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Today's Shifts Card -->
+      <div class="app-card">
+        <div class="app-card-title">
+          <span><i class="bi bi-person-workspace text-warning me-2"></i>شیفت‌های کاری امروز</span>
+        </div>
+        <div class="row g-2">
+          <div class="col-6">
+            <div class="p-3 border rounded-3 bg-body-tertiary d-flex align-items-center justify-content-between">
+              <div>
+                <small class="text-secondary d-block">شیفت روز (۰۷:۰۰ - ۱۹:۰۰)</small>
+                <span class="badge-shift-day mt-1 d-inline-block">روزکاری</span>
+              </div>
+              <div id="dashDayTeamBadge" class="badge-team bg-primary">--</div>
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="p-3 border rounded-3 bg-body-tertiary d-flex align-items-center justify-content-between">
+              <div>
+                <small class="text-secondary d-block">شیفت شب (۱۹:۰۰ - ۰۷:۰۰)</small>
+                <span class="badge-shift-night mt-1 d-inline-block">شبکاری</span>
+              </div>
+              <div id="dashNightTeamBadge" class="badge-team bg-purple" style="background:#8b5cf6;">--</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Today's Events & Notes Summary -->
+      <div class="row g-2">
+        <div class="col-md-6">
+          <div class="app-card h-100">
+            <div class="app-card-title">
+              <span><i class="bi bi-star text-danger me-2"></i>مناسبت‌های امروز</span>
+            </div>
+            <div id="dashEventsContainer" class="fs-7 text-secondary">
+              در حال بررسی مناسبت‌ها...
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="app-card h-100">
+            <div class="app-card-title">
+              <span><i class="bi bi-journal-text text-success me-2"></i>یادداشت‌های امروز</span>
+              <button class="btn btn-sm btn-outline-success" onclick="app.openAddNoteModal()">
+                <i class="bi bi-plus"></i>
+              </button>
+            </div>
+            <div id="dashNotesContainer" class="fs-7 text-secondary">
+              هیچ یادداشتی برای امروز ثبت نشده است.
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- VIEW 2: CALENDAR (تقویم) -->
+    <section id="view-calendar" class="app-view d-none">
+      
+      <!-- Calendar Controls Bar -->
+      <div class="app-card mb-2">
+        <div class="d-flex justify-content-between align-items-center">
+          <button class="btn btn-sm btn-outline-secondary" id="calPrevMonthBtn">
+            <i class="bi bi-chevron-right"></i> ماه قبل
+          </button>
+          <div class="text-center">
+            <h5 class="m-0 font-bold" id="calMonthTitle">--</h5>
+            <small class="text-secondary" id="calSubTitle">--</small>
+          </div>
+          <button class="btn btn-sm btn-outline-secondary" id="calNextMonthBtn">
+            ماه بعد <i class="bi bi-chevron-left"></i>
+          </button>
+        </div>
+        <div class="text-center mt-2">
+          <button class="btn btn-xs btn-primary px-3 rounded-pill" id="calTodayBtn">برو به امروز</button>
+        </div>
+      </div>
+
+      <!-- Calendar Legend -->
+      <div class="d-flex justify-content-around fs-7 text-secondary mb-2 bg-body-tertiary p-2 rounded-3 border">
+        <span><i class="bi bi-circle-fill text-danger"></i> تعطیل / جمعه</span>
+        <span><i class="bi bi-square-fill text-primary"></i> شیفت روز</span>
+        <span><i class="bi bi-square-fill text-purple" style="color:#8b5cf6;"></i> شیفت شب</span>
+        <span><i class="bi bi-circle-fill text-info"></i> یادداشت</span>
+      </div>
+
+      <!-- Calendar Grid -->
+      <div class="calendar-grid" id="calendarGridContainer">
+        <!-- Generated by JavaScript -->
+      </div>
+
+    </section>
+
+    <!-- VIEW 3: TEAMS (تیم‌ها) -->
+    <section id="view-teams" class="app-view d-none">
+      
+      <div class="app-card">
+        <div class="app-card-title">
+          <span><i class="bi bi-people text-info me-2"></i>اطلاعات و شیفت‌های تیم‌ها</span>
+        </div>
+        <!-- Team Tabs -->
+        <ul class="nav nav-pills nav-fill mb-3" id="teamTabs">
+          <li class="nav-item"><a class="nav-link active" data-team="1" href="#">تیم ۱</a></li>
+          <li class="nav-item"><a class="nav-link" data-team="2" href="#">تیم ۲</a></li>
+          <li class="nav-item"><a class="nav-link" data-team="3" href="#">تیم ۳</a></li>
+          <li class="nav-item"><a class="nav-link" data-team="4" href="#">تیم ۴</a></li>
+          <li class="nav-item"><a class="nav-link" data-team="5" href="#">تیم ۵</a></li>
+        </ul>
+
+        <!-- Team Summary Cards -->
+        <div class="row g-2 mb-3">
+          <div class="col-4">
+            <div class="p-2 border rounded-3 text-center bg-body-tertiary">
+              <small class="text-secondary d-block">کل ساعات کاری</small>
+              <strong class="text-info fs-5" id="teamStatHours">0</strong>
+            </div>
+          </div>
+          <div class="col-4">
+            <div class="p-2 border rounded-3 text-center bg-body-tertiary">
+              <small class="text-secondary d-block">شیفت روزکاری</small>
+              <strong class="text-primary fs-5" id="teamStatDayCount">0</strong>
+            </div>
+          </div>
+          <div class="col-4">
+            <div class="p-2 border rounded-3 text-center bg-body-tertiary">
+              <small class="text-secondary d-block">شیفت شبکاری</small>
+              <strong class="text-purple fs-5" style="color:#8b5cf6;" id="teamStatNightCount">0</strong>
+            </div>
+          </div>
+        </div>
+
+        <!-- Upcoming Shifts List for Team -->
+        <h6 class="fw-bold text-primary mb-2"><i class="bi bi-clock-history me-1"></i>۱۰ شیفت بعدی این تیم:</h6>
+        <div class="list-group mb-3" id="teamUpcomingShiftsList">
+          <!-- Populated by JS -->
+        </div>
+
+        <!-- Monthly Breakdown Table -->
+        <h6 class="fw-bold text-primary mb-2"><i class="bi bi-table me-1"></i>آمار تفکیکی سالانه:</h6>
+        <div class="table-responsive">
+          <table class="table table-sm table-bordered align-middle text-center fs-7">
+            <thead class="table-dark">
+              <tr>
+                <th>ماه</th>
+                <th>شیفت روز (۱۲h)</th>
+                <th>شیفت شب (۱۲h)</th>
+                <th>مجموع ساعات</th>
+              </tr>
+            </thead>
+            <tbody id="teamMonthlyStatsTable">
+              <!-- Populated by JS -->
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- VIEW 4: CONVERTER (تبدیل تاریخ) -->
+    <section id="view-converter" class="app-view d-none">
+      
+      <div class="app-card">
+        <div class="app-card-title">
+          <span><i class="bi bi-arrow-repeat text-warning me-2"></i>تبدیل هوشمند تاریخ</span>
+        </div>
+
+        <!-- Conversion Form -->
+        <div class="row g-2 mb-3">
+          <div class="col-md-4">
+            <label class="form-label fs-7">سال خورشیدی</label>
+            <input type="number" id="convJalaliYear" class="form-control" value="1405">
+          </div>
+          <div class="col-md-4">
+            <label class="form-label fs-7">ماه خورشیدی</label>
+            <select id="convJalaliMonth" class="form-select">
+              <option value="1">فروردین</option>
+              <option value="2">اردیبهشت</option>
+              <option value="3">خرداد</option>
+              <option value="4" selected>تیر</option>
+              <option value="5">مرداد</option>
+              <option value="6">شهریور</option>
+              <option value="7">مهر</option>
+              <option value="8">آبان</option>
+              <option value="9">آذر</option>
+              <option value="10">دی</option>
+              <option value="11">بهمن</option>
+              <option value="12">اسفند</option>
+            </select>
+          </div>
+          <div class="col-md-4">
+            <label class="form-label fs-7">روز خورشیدی</label>
+            <input type="number" id="convJalaliDay" class="form-control" value="29" min="1" max="31">
+          </div>
+        </div>
+
+        <!-- Conversion Result Output Box -->
+        <div class="p-3 border rounded-3 bg-body-tertiary">
+          <h6 class="fw-bold text-success mb-3"><i class="bi bi-check-circle me-1"></i>نتایج محاسبات تاریخ:</h6>
+          <div class="row g-2 fs-7 mb-2">
+            <div class="col-md-6"><strong>تاریخ خورشیدی:</strong> <span id="resJalali" class="text-info fw-bold">--</span></div>
+            <div class="col-md-6"><strong>تاریخ میلادی:</strong> <span id="resGregorian" class="text-success fw-bold">--</span></div>
+            <div class="col-md-6"><strong>تاریخ قمری:</strong> <span id="resHijri" class="text-warning fw-bold">--</span></div>
+            <div class="col-md-6"><strong>روز هفته:</strong> <span id="resWeekday" class="fw-bold">--</span></div>
+            <div class="col-md-6"><strong>شماره هفته سال:</strong> <span id="resWeekNum" class="fw-bold">--</span></div>
+          </div>
+          <hr class="my-2">
+          <div class="row g-2 fs-7">
+            <div class="col-6">
+              <strong>شیفت روزکاری (۰۷:۰۰ - ۱۹:۰۰):</strong>
+              <div id="resDayTeam" class="mt-1 fs-6 fw-bold text-primary">تیم --</div>
+            </div>
+            <div class="col-6">
+              <strong>شیفت شبکاری (۱۹:۰۰ - ۰۷:۰۰):</strong>
+              <div id="resNightTeam" class="mt-1 fs-6 fw-bold text-purple" style="color:#8b5cf6;">تیم --</div>
+            </div>
+          </div>
+          <div class="mt-2 fs-7 text-secondary" id="resEvents">
+            مناسبت‌ها: --
+          </div>
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- VIEW 5: SEARCH (جستجو) -->
+    <section id="view-search" class="app-view d-none">
+      
+      <div class="app-card">
+        <div class="app-card-title">
+          <span><i class="bi bi-search text-primary me-2"></i>جستجوی پیشرفته</span>
+        </div>
+        <div class="input-group mb-3">
+          <input type="text" id="searchInput" class="form-control" placeholder="جستجو بر اساس تاریخ، تیم، رویداد یا یادداشت...">
+          <button class="btn btn-primary" id="searchBtn"><i class="bi bi-search"></i> جستجو</button>
+        </div>
+
+        <div id="searchResultsContainer" class="list-group">
+          <div class="text-center text-secondary py-4">
+            عبارت مورد نظر خود را وارد کرده و جستجو کنید.
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- VIEW 6: NOTES (یادداشت‌ها) -->
+    <section id="view-notes" class="app-view d-none">
+      
+      <div class="app-card">
+        <div class="app-card-title">
+          <span><i class="bi bi-journal-text text-success me-2"></i>مدیریت یادداشت‌ها</span>
+          <button class="btn btn-sm btn-success" onclick="app.openAddNoteModal()">
+            <i class="bi bi-plus-lg"></i> جدید
+          </button>
+        </div>
+
+        <div class="input-group mb-3">
+          <input type="text" id="notesSearchInput" class="form-control form-control-sm" placeholder="جستجو در یادداشت‌ها...">
+        </div>
+
+        <div id="notesListContainer">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+
+    </section>
+
+    <!-- VIEW 7: REPORTS (گزارش‌ها و پشتیبان‌گیری) -->
+    <section id="view-reports" class="app-view d-none">
+      
+      <div class="app-card">
+        <div class="app-card-title">
+          <span><i class="bi bi-file-earmark-pdf text-danger me-2"></i>گزارش‌ها و خروجی برنامه</span>
+        </div>
+
+        <div class="d-grid gap-2 mb-3">
+          <button class="btn btn-outline-primary text-start" id="printScheduleBtn">
+            <i class="bi bi-printer me-2"></i>چاپ و دریافت PDF برنامه شیفت ماه جاری
+          </button>
+          <button class="btn btn-outline-success text-start" id="shareScheduleBtn">
+            <i class="bi bi-share me-2"></i>اشتراک‌گذاری برنامه شیفت در پیام‌رسان‌ها
+          </button>
+        </div>
+
+        <hr>
+
+        <h6 class="fw-bold mb-2"><i class="bi bi-database-gear me-1"></i>پشتیبان‌گیری و بازگردانی اطلاعات</h6>
+        <div class="d-grid gap-2">
+          <button class="btn btn-outline-info text-start" id="exportBackupBtn">
+            <i class="bi bi-download me-2"></i>دانلود فایل پشتیبان کامل (JSON)
+          </button>
+          <button class="btn btn-outline-warning text-start" id="importBackupBtn">
+            <i class="bi bi-upload me-2"></i>بازگردانی فایل پشتیبان (JSON)
+          </button>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- VIEW 8: SETTINGS (تنظیمات) -->
+    <section id="view-settings" class="app-view d-none">
+      
+      <div class="app-card">
+        <div class="app-card-title">
+          <span><i class="bi bi-gear text-secondary me-2"></i>تنظیمات موتور شیفت و برنامه</span>
+        </div>
+
+        <form id="settingsForm">
+          
+          <h6 class="text-primary fw-bold border-bottom pb-1 mb-2">ظاهر برنامه</h6>
+          <div class="mb-3">
+            <label class="form-label fs-7">پوسته (Theme)</label>
+            <select id="settingTheme" class="form-select">
+              <option value="dark">تاریک (Dark)</option>
+              <option value="light">روشن (Light)</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label class="form-label fs-7">اندازه قلم</label>
+            <select id="settingFontSize" class="form-select">
+              <option value="small">کوچک</option>
+              <option value="medium" selected>متوسط</option>
+              <option value="large">بزرگ</option>
+            </select>
+          </div>
+
+          <h6 class="text-primary fw-bold border-bottom pb-1 mb-2">مبدأ و چرخش شیفت کاری</h6>
+          <div class="row g-2 mb-2">
+            <div class="col-4">
+              <label class="form-label fs-7">سال مبدأ</label>
+              <input type="number" id="settingRefYear" class="form-control" value="1405">
+            </div>
+            <div class="col-4">
+              <label class="form-label fs-7">ماه مبدأ</label>
+              <input type="number" id="settingRefMonth" class="form-control" value="4" min="1" max="12">
+            </div>
+            <div class="col-4">
+              <label class="form-label fs-7">روز مبدأ</label>
+              <input type="number" id="settingRefDay" class="form-control" value="29" min="1" max="31">
+            </div>
+          </div>
+
+          <div class="row g-2 mb-3">
+            <div class="col-6">
+              <label class="form-label fs-7">تیم فعال در مبدأ</label>
+              <select id="settingRefTeam" class="form-select">
+                <option value="1">تیم ۱</option>
+                <option value="2" selected>تیم ۲</option>
+                <option value="3">تیم ۳</option>
+                <option value="4">تیم ۴</option>
+                <option value="5">تیم ۵</option>
+              </select>
+            </div>
+            <div class="col-6">
+              <label class="form-label fs-7">مدت زمان شیفت (ساعت)</label>
+              <input type="number" id="settingShiftDuration" class="form-control" value="12">
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label fs-7">ترتیب چرخش تیم‌ها (با کاما جدا کنید)</label>
+            <input type="text" id="settingRotationOrder" class="form-control" value="1, 3, 5, 2, 4">
+            <div class="form-text fs-8">پیش‌فرض: 1, 3, 5, 2, 4</div>
+          </div>
+
+          <div class="d-grid gap-2">
+            <button type="submit" class="btn btn-primary"><i class="bi bi-save me-1"></i>ذخیره تنظیمات</button>
+            <button type="button" class="btn btn-outline-danger" id="resetSettingsBtn"><i class="bi bi-arrow-counterclockwise me-1"></i>بازنشانی به پیش‌فرض</button>
+          </div>
+
+        </form>
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- FAB Button for Adding Note -->
+  <button class="fab-btn" onclick="app.openAddNoteModal()" title="افزودن یادداشت">
+    <i class="bi bi-plus-lg"></i>
+  </button>
+
+  <!-- Bottom Navigation Bar -->
+  <nav class="bottom-nav">
+    <button class="nav-item-btn active" data-target="dashboard">
+      <i class="bi bi-house-door"></i>
+      <span>داشبورد</span>
+    </button>
+    <button class="nav-item-btn" data-target="calendar">
+      <i class="bi bi-calendar-month"></i>
+      <span>تقویم</span>
+    </button>
+    <button class="nav-item-btn" data-target="teams">
+      <i class="bi bi-people"></i>
+      <span>تیم‌ها</span>
+    </button>
+    <button class="nav-item-btn" data-target="converter">
+      <i class="bi bi-arrow-repeat"></i>
+      <span>تبدیل</span>
+    </button>
+    <button class="nav-item-btn" data-target="notes">
+      <i class="bi bi-journal-text"></i>
+      <span>یادداشت</span>
+    </button>
+    <button class="nav-item-btn" data-target="reports">
+      <i class="bi bi-bar-chart"></i>
+      <span>گزارش</span>
+    </button>
+    <button class="nav-item-btn" data-target="settings">
+      <i class="bi bi-gear"></i>
+      <span>تنظیمات</span>
+    </button>
+  </nav>
+
+  <!-- MODAL 1: Day Details Modal -->
+  <div class="modal fade" id="dayDetailModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title font-bold" id="modalDayTitle">جزئیات روز</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body" id="modalDayBody">
+          <!-- Populated by JS -->
+        </div>
+        <div class="modal-footer justify-content-between">
+          <button type="button" class="btn btn-sm btn-outline-success" id="modalAddNoteBtn">
+            <i class="bi bi-journal-plus me-1"></i>افزودن یادداشت
+          </button>
+          <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">بستن</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL 2: Add/Edit Note Modal -->
+  <div class="modal fade" id="noteModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title font-bold" id="noteModalTitle">افزودن یادداشت</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <form id="noteForm">
+            <input type="hidden" id="noteIdInput">
+            <div class="mb-2">
+              <label class="form-label fs-7">عنوان یادداشت</label>
+              <input type="text" id="noteTitleInput" class="form-control" required>
+            </div>
+            <div class="mb-2">
+              <label class="form-label fs-7">تاریخ خورشیدی (مثال: ۱۴۰۵/۰۴/۲۹)</label>
+              <input type="text" id="noteDateInput" class="form-control" required>
+            </div>
+            <div class="mb-2">
+              <label class="form-label fs-7">متن یادداشت</label>
+              <textarea id="noteTextInput" class="form-control" rows="3" required></textarea>
+            </div>
+            <div class="row g-2 mb-2">
+              <div class="col-6">
+                <label class="form-label fs-7">دسته‌بندی</label>
+                <select id="noteCategoryInput" class="form-select form-select-sm">
+                  <option value="عمومی">عمومی</option>
+                  <option value="شیفت کاری">شیفت کاری</option>
+                  <option value="یادآوری">یادآوری</option>
+                  <option value="شخصی">شخصی</option>
+                </select>
+              </div>
+              <div class="col-6">
+                <label class="form-label fs-7">رنگ تگ</label>
+                <input type="color" id="noteColorInput" class="form-control form-control-color w-100" value="#0284c7">
+              </div>
+            </div>
+            <button type="submit" class="btn btn-primary w-100 mt-2">ذخیره یادداشت</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL 3: Import Backup Modal -->
+  <div class="modal fade" id="importBackupModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title font-bold">بازگردانی فایل پشتیبان</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <label class="form-label fs-7">انتخاب فایل پشتیبان (JSON)</label>
+          <input type="file" id="backupFileInput" class="form-control mb-3" accept=".json">
+          <div class="alert alert-warning fs-8 m-0">
+            هشدار: بازگردانی پشتیبان تمامی اطلاعات و تنظیمات فعلی شما را جایگزین خواهد کرد.
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">انصراف</button>
+          <button type="button" class="btn btn-warning" id="confirmImportBtn">بازگردانی</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- JavaScript Libraries & Core Modules -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="calendar.js"></script>
+  <script src="shiftCalculator.js"></script>
+  <script src="notes.js"></script>
+  <script src="settings.js"></script>
+  <script src="converter.js"></script>
+  <script src="pdf.js"></script>
+  <script src="app.js"></script>
+
+</body>
+</html>

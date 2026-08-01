@@ -1,0 +1,26 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <!-- Calendar Body -->
+    <path
+        android:fillColor="#38BDF8"
+        android:pathData="M32,28h44c3.3,0 6,2.7 6,6v40c0,3.3 -2.7,6 -6,6H32c-3.3,0 -6,-2.7 -6,-6V34c0,-3.3 2.7,-6 6,-6z" />
+    <!-- Header Band -->
+    <path
+        android:fillColor="#0284C7"
+        android:pathData="M26,34c0,-3.3 2.7,-6 6,-6h44c3.3,0 6,2.7 6,6v10H26V34z" />
+    <!-- Binder Rings -->
+    <path
+        android:fillColor="#38BDF8"
+        android:pathData="M36,22h4v8h-4zM68,22h4v8h-4z" />
+    <!-- Shift Clock Circle -->
+    <path
+        android:fillColor="#F59E0B"
+        android:pathData="M54,48a12,12 0 1,0 0,24a12,12 0 1,0 0,-24z" />
+    <!-- Clock Hands -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M53,53h2v8h-2zM53,59h6v2h-6z" />
+</vector>

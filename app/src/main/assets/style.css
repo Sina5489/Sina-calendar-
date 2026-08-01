@@ -1,0 +1,458 @@
+/* ==========================================================================
+   Taghvim Sina (تقویم سینا) - Clean Minimalism Material 3 Stylesheet
+   ========================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800;900&display=swap');
+
+:root {
+  --font-family: 'Vazirmatn', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --primary-color: #005AC1;
+  --primary-hover: #004395;
+  --primary-container: #D3E4FF;
+  --primary-on-container: #001D40;
+  --accent-color: #f59e0b;
+  --day-shift-color: #005AC1;
+  --night-shift-color: #7C3AED;
+  --friday-color: #ef4444;
+  --today-bg: rgba(0, 90, 193, 0.08);
+  --today-border: #005AC1;
+
+  /* Theme Defaults (Dark) */
+  --bg-color: #0f172a;
+  --surface-color: #1e293b;
+  --surface-border: #334155;
+  --text-primary: #f8fafc;
+  --text-secondary: #94a3b8;
+  --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+  --nav-active-bg: rgba(211, 228, 255, 0.18);
+  --nav-active-color: #60a5fa;
+}
+
+body.light-mode {
+  --bg-color: #F3F4F9;
+  --surface-color: #ffffff;
+  --surface-border: #e2e8f0;
+  --text-primary: #1A1C1E;
+  --text-secondary: #5E6470;
+  --card-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+  --nav-active-bg: #D3E4FF;
+  --nav-active-color: #005AC1;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: var(--font-family);
+  direction: rtl;
+  text-align: right;
+  background-color: var(--bg-color);
+  color: var(--text-primary);
+  margin: 0;
+  padding: 0;
+  padding-bottom: 90px; /* Space for Material 3 bottom nav bar */
+  min-height: 100vh;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Font Sizes */
+body.fs-small { font-size: 13px; }
+body.fs-medium { font-size: 15px; }
+body.fs-large { font-size: 17px; }
+
+/* Top Navbar */
+.app-header {
+  background: var(--surface-color);
+  border-bottom: 1px solid var(--surface-border);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  padding: 14px 20px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+}
+
+.brand-title {
+  font-weight: 800;
+  font-size: 1.2rem;
+  color: var(--primary-color);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.brand-title i {
+  background: rgba(0, 90, 193, 0.1);
+  padding: 6px;
+  border-radius: 12px;
+  font-size: 1.1rem;
+}
+
+/* Bottom Navigation Bar (Material 3 Style) */
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 76px;
+  background: var(--surface-color);
+  border-top: 1px solid var(--surface-border);
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding: 6px 12px;
+  z-index: 1050;
+  backdrop-filter: blur(12px);
+}
+
+.nav-item-btn {
+  background: transparent;
+  border: none;
+  color: var(--text-secondary);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: 11px;
+  font-family: var(--font-family);
+  gap: 3px;
+  padding: 6px 10px;
+  border-radius: 20px;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+  flex: 1;
+  text-align: center;
+}
+
+.nav-item-btn i {
+  font-size: 20px;
+  padding: 3px 16px;
+  border-radius: 20px;
+  transition: all 0.2s ease;
+}
+
+.nav-item-btn.active {
+  color: var(--nav-active-color);
+  font-weight: 700;
+}
+
+.nav-item-btn.active i {
+  background: var(--nav-active-bg);
+  color: var(--nav-active-color);
+}
+
+/* Card Styling - Clean Minimalist 24px Rounded Cards */
+.app-card {
+  background: var(--surface-color);
+  border: 1px solid var(--surface-border);
+  border-radius: 24px;
+  padding: 20px;
+  margin-bottom: 16px;
+  box-shadow: var(--card-shadow);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.app-card-title {
+  font-size: 1.05rem;
+  font-weight: 700;
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: var(--text-primary);
+}
+
+/* Countdown Timer Hero Banner */
+.countdown-banner {
+  background: linear-gradient(135deg, #005AC1 0%, #004395 100%);
+  color: #ffffff;
+  border-radius: 24px;
+  padding: 22px 20px;
+  text-align: center;
+  box-shadow: 0 10px 30px rgba(0, 90, 193, 0.25);
+  position: relative;
+  overflow: hidden;
+}
+
+.countdown-banner::before {
+  content: '';
+  position: absolute;
+  bottom: -30px;
+  left: -30px;
+  width: 140px;
+  height: 140px;
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 50%;
+  filter: blur(20px);
+  pointer-events: none;
+}
+
+.countdown-digits {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin: 18px 0;
+  direction: ltr; /* Keeps numbers HH : MM : SS format */
+}
+
+.time-box {
+  background: rgba(255, 255, 255, 0.16);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 16px;
+  padding: 10px 14px;
+  min-width: 68px;
+}
+
+.time-box .num {
+  font-size: 1.9rem;
+  font-weight: 800;
+  line-height: 1.1;
+  font-family: var(--font-family);
+  letter-spacing: -0.5px;
+}
+
+.time-box .label {
+  font-size: 11px;
+  opacity: 0.9;
+  font-weight: 500;
+  margin-top: 2px;
+}
+
+/* Badges for Shifts */
+.badge-shift-day {
+  background-color: rgba(0, 90, 193, 0.12);
+  color: var(--primary-color);
+  border: 1px solid rgba(0, 90, 193, 0.25);
+  padding: 5px 12px;
+  border-radius: 12px;
+  font-weight: 700;
+  font-size: 12px;
+}
+
+.badge-shift-night {
+  background-color: rgba(124, 58, 237, 0.12);
+  color: #7C3AED;
+  border: 1px solid rgba(124, 58, 237, 0.25);
+  padding: 5px 12px;
+  border-radius: 12px;
+  font-weight: 700;
+  font-size: 12px;
+}
+
+.badge-team {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  color: #ffffff;
+  font-weight: 800;
+  font-size: 15px;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.15);
+}
+
+/* Buttons Styling */
+.btn-primary {
+  background-color: var(--primary-color) !important;
+  border-color: var(--primary-color) !important;
+  border-radius: 14px;
+  font-weight: 600;
+  padding: 8px 18px;
+  transition: all 0.2s ease;
+}
+
+.btn-primary:hover, .btn-primary:focus {
+  background-color: var(--primary-hover) !important;
+  border-color: var(--primary-hover) !important;
+}
+
+.btn-outline-primary {
+  color: var(--primary-color) !important;
+  border-color: var(--primary-color) !important;
+  border-radius: 14px;
+  font-weight: 600;
+}
+
+.btn-outline-primary:hover {
+  background-color: var(--primary-color) !important;
+  color: #ffffff !important;
+}
+
+.nav-pills .nav-link {
+  border-radius: 14px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  transition: all 0.2s ease;
+}
+
+.nav-pills .nav-link.active {
+  background-color: var(--primary-color) !important;
+  color: #ffffff !important;
+}
+
+/* Calendar Grid */
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 6px;
+  margin-top: 14px;
+}
+
+.calendar-header-day {
+  text-align: center;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 8px 2px;
+  color: var(--text-secondary);
+}
+
+.calendar-header-day.friday {
+  color: var(--friday-color);
+}
+
+.calendar-day-cell {
+  background: var(--surface-color);
+  border: 1px solid var(--surface-border);
+  border-radius: 16px;
+  min-height: 72px;
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.calendar-day-cell:hover {
+  transform: translateY(-2px);
+  border-color: var(--primary-color);
+  box-shadow: 0 4px 12px rgba(0, 90, 193, 0.15);
+}
+
+.calendar-day-cell.today {
+  background: var(--today-bg);
+  border: 2px solid var(--today-border);
+}
+
+.calendar-day-cell.friday .day-number {
+  color: var(--friday-color);
+  font-weight: 800;
+}
+
+.calendar-day-cell .day-number {
+  font-weight: 700;
+  font-size: 14px;
+}
+
+.calendar-day-cell .shift-pills {
+  display: flex;
+  gap: 2px;
+  justify-content: space-between;
+  font-size: 10px;
+}
+
+.pill-day {
+  background: #005AC1;
+  color: white;
+  border-radius: 6px;
+  padding: 1px 5px;
+  font-size: 9px;
+  font-weight: 700;
+}
+
+.pill-night {
+  background: #7C3AED;
+  color: white;
+  border-radius: 6px;
+  padding: 1px 5px;
+  font-size: 9px;
+  font-weight: 700;
+}
+
+.calendar-day-cell .event-dot {
+  width: 6px;
+  height: 6px;
+  background-color: var(--accent-color);
+  border-radius: 50%;
+  position: absolute;
+  top: 6px;
+  left: 6px;
+}
+
+/* Modals */
+.modal-content {
+  background-color: var(--surface-color);
+  color: var(--text-primary);
+  border: 1px solid var(--surface-border);
+  border-radius: 24px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+.modal-header {
+  border-bottom: 1px solid var(--surface-border);
+  padding: 18px 24px;
+}
+
+.modal-footer {
+  border-top: 1px solid var(--surface-border);
+  padding: 14px 24px;
+}
+
+.form-control, .form-select {
+  border-radius: 12px;
+  padding: 10px 14px;
+  border: 1px solid var(--surface-border);
+  background-color: var(--surface-color);
+  color: var(--text-primary);
+}
+
+.form-control:focus, .form-select:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(0, 90, 193, 0.15);
+}
+
+/* Floating Action Button */
+.fab-btn {
+  position: fixed;
+  bottom: 92px;
+  left: 20px;
+  width: 56px;
+  height: 56px;
+  border-radius: 18px;
+  background: var(--primary-color);
+  color: white;
+  border: none;
+  box-shadow: 0 6px 20px rgba(0, 90, 193, 0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  cursor: pointer;
+  z-index: 1040;
+  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s ease;
+}
+
+.fab-btn:hover {
+  transform: scale(1.08);
+  box-shadow: 0 8px 25px rgba(0, 90, 193, 0.45);
+}
+
+/* Print Styles */
+@media print {
+  .app-header, .bottom-nav, .fab-btn, .no-print {
+    display: none !important;
+  }
+  body {
+    background: #ffffff !important;
+    color: #000000 !important;
+    padding-bottom: 0 !important;
+  }
+  .app-card {
+    border: none !important;
+    box-shadow: none !important;
+  }
+}
+
