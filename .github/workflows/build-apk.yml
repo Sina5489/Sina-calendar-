@@ -28,6 +28,16 @@ jobs:
           distribution: temurin
           java-version: "17"
 
+      - name: Set up Python for launcher icon generation
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Generate launcher icons from published PWA logo
+        run: |
+          python -m pip install --disable-pip-version-check Pillow
+          python app/scripts/generate_launcher_icons.py
+
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v4
         with:
