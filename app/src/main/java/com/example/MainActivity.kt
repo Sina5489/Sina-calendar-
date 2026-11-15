@@ -71,7 +71,7 @@ fun TaghvimSinaWebView(onWebViewCreated: (WebView) -> Unit) {
                 }
                 webViewClient = object : WebViewClient() {}
                 webChromeClient = WebChromeClient()
-                loadUrl("file:///android_asset/index.html")
+                loadUrl("https://sina5489.github.io/ATC-Calendar-/calendar/")
                 onWebViewCreated(this)
             }
         },
