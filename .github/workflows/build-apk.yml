@@ -3,7 +3,7 @@ name: Build ATC Calendar APK
 on:
   workflow_dispatch:
   push:
-    branches: [main, atc-calendar-branding-2026-11-15]
+    branches: [main, atc-calendar-branding-2026-11-15, atc-calendar-hide-ad-dots-2026-11-15]
     paths:
       - "app/**"
       - "gradle/**"
@@ -27,16 +27,6 @@ jobs:
         with:
           distribution: temurin
           java-version: "17"
-
-      - name: Set up Python for launcher icon generation
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.12"
-
-      - name: Generate launcher icons from published PWA logo
-        run: |
-          python -m pip install --disable-pip-version-check Pillow
-          python app/scripts/generate_launcher_icons.py
 
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v4
@@ -66,14 +56,14 @@ jobs:
           echo "$ANDROID_KEYSTORE_BASE64" | base64 --decode > "$RUNNER_TEMP/atc-calendar-upload.jks"
           KEYSTORE_PATH="$RUNNER_TEMP/atc-calendar-upload.jks" gradle --no-daemon :app:assembleRelease
           mkdir -p dist
-          cp app/build/outputs/apk/release/app-release.apk dist/ATC-Calendar-1.1.0-release.apk
+          cp app/build/outputs/apk/release/app-release.apk dist/ATC-Calendar-1.1.1-release.apk
 
       - name: Build debug APK when release signing is not configured
         if: ${{ steps.signing.outputs.ready != 'true' }}
         run: |
           gradle --no-daemon :app:assembleDebug
           mkdir -p dist
-          cp app/build/outputs/apk/debug/app-debug.apk dist/ATC-Calendar-1.1.0-debug.apk
+          cp app/build/outputs/apk/debug/app-debug.apk dist/ATC-Calendar-1.1.1-debug.apk
 
       - name: Upload APK artifact
         uses: actions/upload-artifact@v4
@@ -87,7 +77,7 @@ jobs:
         if: ${{ steps.signing.outputs.ready == 'true' }}
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: atc-calendar-v1.1.0-${{ github.run_number }}
-          name: ATC Calendar 1.1.0
-          files: dist/ATC-Calendar-1.1.0-release.apk
+          tag_name: atc-calendar-v1.1.1-${{ github.run_number }}
+          name: ATC Calendar 1.1.1
+          files: dist/ATC-Calendar-1.1.1-release.apk
           generate_release_notes: true
