@@ -33,9 +33,21 @@ jobs:
         with:
           gradle-version: "9.3.1"
 
-      - name: Build signed release APK when signing secrets exist
-        id: release
-        if: ${{ secrets.ANDROID_KEYSTORE_BASE64 != '' && secrets.STORE_PASSWORD != '' && secrets.KEY_PASSWORD != '' }}
+      - name: Check release signing configuration
+        id: signing
+        env:
+          ANDROID_KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+          STORE_PASSWORD: ${{ secrets.STORE_PASSWORD }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+        run: |
+          if [ -n "$ANDROID_KEYSTORE_BASE64" ] && [ -n "$STORE_PASSWORD" ] && [ -n "$KEY_PASSWORD" ]; then
+            echo "ready=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "ready=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Build signed release APK
+        if: ${{ steps.signing.outputs.ready == 'true' }}
         env:
           ANDROID_KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
           STORE_PASSWORD: ${{ secrets.STORE_PASSWORD }}
@@ -47,7 +59,7 @@ jobs:
           cp app/build/outputs/apk/release/app-release.apk dist/ATC-Calendar-1.1.0-release.apk
 
       - name: Build debug APK when release signing is not configured
-        if: ${{ secrets.ANDROID_KEYSTORE_BASE64 == '' || secrets.STORE_PASSWORD == '' || secrets.KEY_PASSWORD == '' }}
+        if: ${{ steps.signing.outputs.ready != 'true' }}
         run: |
           gradle --no-daemon :app:assembleDebug
           mkdir -p dist
@@ -62,7 +74,7 @@ jobs:
           retention-days: 30
 
       - name: Publish signed APK as GitHub Release
-        if: ${{ steps.release.outcome == 'success' }}
+        if: ${{ steps.signing.outputs.ready == 'true' }}
         uses: softprops/action-gh-release@v2
         with:
           tag_name: atc-calendar-v1.1.0-${{ github.run_number }}
