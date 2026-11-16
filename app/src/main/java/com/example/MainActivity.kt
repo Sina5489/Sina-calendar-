@@ -68,6 +68,7 @@ fun TaghvimSinaWebView(onWebViewCreated: (WebView) -> Unit) {
                     loadWithOverviewMode = true
                     useWideViewPort = true
                     cacheMode = WebSettings.LOAD_DEFAULT
+                    userAgentString = userAgentString + " ATCCalendarAPK/1.1.2"
                 }
                 webViewClient = object : WebViewClient() {
                     override fun onPageFinished(view: WebView, url: String) {
